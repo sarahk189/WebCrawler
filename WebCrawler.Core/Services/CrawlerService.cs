@@ -28,8 +28,8 @@ public class CrawlerService(HttpClient httpClient) : ICrawlerService
         //return the results
         return new CrawlResults
         {
-            Domain = baseUri.GetLeftPart(UriPartial.Authority), // just the scheme and host (e.g., https://example.com)
-            Pages = _visitedUrls.OrderBy(x => x).ToList()           // sort for readability
+            Domain = baseUri.GetLeftPart(UriPartial.Authority),
+            Pages = _visitedUrls.OrderBy(x => x).ToList() 
         };
     }
 
