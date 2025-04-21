@@ -9,7 +9,7 @@ public class CrawlerService(HttpClient httpClient) : ICrawlerService
     private readonly HttpClient _httpClient = httpClient;
 
     //shows the pages we've checked so we don't check them again
-    private readonly HashSet<string> _visitedUrls = new HashSet<string>();
+    private readonly HashSet<string> _visitedPages = new HashSet<string>();
 
     public async Task<CrawlResults> CrawlAsync(string rootUrl)
     {
@@ -19,7 +19,7 @@ public class CrawlerService(HttpClient httpClient) : ICrawlerService
             throw new ArgumentException("Root URL cannot be null or empty.", nameof(rootUrl));
         }
 
-        //convert the root URL to a Uri object
+        //convert the root URL to a Uri object to make it easier to validate. 
         var baseUri = new Uri(rootUrl);
 
         //start crawling! checking it out!
@@ -29,7 +29,7 @@ public class CrawlerService(HttpClient httpClient) : ICrawlerService
         return new CrawlResults
         {
             Domain = baseUri.GetLeftPart(UriPartial.Authority),
-            Pages = _visitedUrls.OrderBy(x => x).ToList() 
+            Pages = _visitedPages.OrderBy(x => x).ToList()
         };
     }
 
@@ -69,12 +69,12 @@ public class CrawlerService(HttpClient httpClient) : ICrawlerService
         var url = currentUri.ToString();
 
         //check if we've already visited this URL
-        if (_visitedUrls.Contains(url) || currentUri.Host != baseUri.Host)
+        if (_visitedPages.Contains(url) || currentUri.Host != baseUri.Host)
             return;
 
 
         //add the URL to the list of visited URLs
-        _visitedUrls.Add(url);
+        _visitedPages.Add(url);
 
         try
         {
